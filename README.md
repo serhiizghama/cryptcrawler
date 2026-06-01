@@ -77,14 +77,37 @@ gemini -p "say hello"
 ```bash
 git clone https://github.com/serhiizghama/cryptcrawler.git
 cd cryptcrawler
-python cryptcrawler.py
 ```
 
-That's it. No `pip install`, no setup, no config files.
+CryptCrawler ships in two flavours — both pure stdlib, no `pip install`.
+
+**2D mode (browser, top-down)** — a procedurally generated map drawn on a
+canvas, rooms and tunnels built in code, each room narrated live by Gemini:
+
+```bash
+python3 server.py
+# then open http://localhost:8000
+```
+
+**Classic mode (terminal, text)** — the original text crawler:
+
+```bash
+python3 cryptcrawler.py
+```
+
+> Use `python3`, not `python` — on machines where `python` is unset (e.g. a
+> bare pyenv install) the plain command won't resolve.
 
 ---
 
 ## How to Play
+
+**2D mode** — walk with the arrow keys or `WASD`. Bump into a monster to attack
+it. Pick up loot by stepping onto it (weapons add `+2 ATK`, potions heal). Find
+the `>` stairs to descend to a deeper, deadlier level. Fog of war hides what you
+haven't explored yet.
+
+**Classic (terminal) mode:**
 
 | Input | Action |
 |-------|--------|
@@ -96,18 +119,26 @@ That's it. No `pip install`, no setup, no config files.
 | `q` | Quit |
 | `ENTER` | Advance combat round |
 
-**Combat** is turn-based — you and the monster trade blows each round until one falls. Weapons found in rooms increase your damage permanently.
+**Combat** is turn-based — you and the monster trade blows until one falls.
+Weapons found in rooms increase your damage permanently.
 
 ---
 
 ## Architecture
 
 ```
-cryptcrawler.py   — game loop, combat, terminal renderer
-dungeon.py        — Gemini integration, room parsing, fallback logic
+server.py         — stdlib HTTP server: serves the 2D client, bridges narration
+web/              — canvas client: procedural map, top-down renderer, combat (JS)
+cryptcrawler.py   — classic terminal game loop, combat, renderer
+dungeon.py        — Gemini integration, room parsing, fallback logic (shared)
 ```
 
-Gemini receives the current game state (HP, depth, recent rooms, inventory) and returns a JSON room object. The game parses it and renders the result. If the call fails or times out, a hand-written fallback room is used instead — the game never breaks.
+Both modes share `dungeon.py`: Gemini receives the current game state (HP, depth,
+recent rooms, inventory) and returns a JSON room object — description, atmosphere,
+monster, and loot. The 2D client generates the *layout* (rooms, tunnels, fog)
+itself in code, and uses Gemini purely for the prose and the creatures that fill
+each room. If the call fails or times out, a hand-written fallback room is used
+instead — the game never breaks.
 
 ---
 
@@ -116,7 +147,7 @@ Gemini receives the current game state (HP, depth, recent rooms, inventory) and 
 - [ ] Save / load runs
 - [ ] Boss encounters at depth milestones
 - [ ] Named artifacts with lore
-- [ ] ASCII map of explored rooms
+- [x] Map of explored rooms (2D mode)
 - [ ] Multiple dungeon themes (catacombs, ruins, abyssal deep)
 
 ---

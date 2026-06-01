@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CryptCrawler</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="app">
+    <main id="stage">
+      <canvas id="screen" width="800" height="560"></canvas>
+
+      <!-- Title / death overlay -->
+      <div id="overlay" class="overlay">
+        <pre id="overlay-art" class="logo"></pre>
+        <h1 id="overlay-title">CRYPTCRAWLER</h1>
+        <p id="overlay-sub">A dungeon drawn live. No two runs alike.</p>
+        <button id="overlay-btn">▶ Descend</button>
+        <p class="hint">move: arrows / WASD · bump enemies to attack · <b>&gt;</b> goes deeper</p>
+      </div>
+    </main>
+
+    <aside id="panel">
+      <div class="hud">
+        <div class="hud-row">
+          <span class="hud-depth">▓ DEPTH <b id="hud-depth">1</b></span>
+        </div>
+        <div class="hp">
+          <div class="hp-bar"><div id="hp-fill" class="hp-fill"></div></div>
+          <span id="hp-text" class="hp-text">20 / 20</span>
+        </div>
+        <div class="hud-row stats">
+          <span>⚔ ATK <b id="hud-atk">4</b></span>
+          <span>◆ ITEMS <b id="hud-items">0</b></span>
+        </div>
+      </div>
+
+      <div class="narration">
+        <div id="room-name" class="room-name">The Threshold</div>
+        <p id="room-desc" class="room-desc">Press <b>Descend</b> to enter the crypt…</p>
+        <p id="room-atmo" class="room-atmo"></p>
+      </div>
+
+      <div class="inv-wrap">
+        <div class="inv-title">INVENTORY</div>
+        <div id="inv" class="inv"><div class="inv-empty">(empty)</div></div>
+      </div>
+
+      <div class="log-wrap">
+        <div class="log-title">LOG</div>
+        <div id="log" class="log"></div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="/game.js"></script>
+</body>
+</html>
